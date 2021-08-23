@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:visibility="gone"
+            android:id="@+id/main_card_view_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="22dp"
+            app:cardCornerRadius="5dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="#09A6A5"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardElevation="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:id="@+id/anime_title"
+                        android:text="推送" />
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:id="@+id/id_mng_entry"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/acmng">
+                    </ImageView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/id_linked_stats"
+                        android:layout_marginTop="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="当前无连接 "
+                        android:textColor="#E8E6E6"
+                        android:textSize="15dp">
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/id_focused_stats"
+                        android:layout_marginTop="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="| 当前无聚焦"
+                        android:textColor="#E8E6E6"
+                        android:textSize="15dp">
+
+                    </TextView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </androidx.cardview.widget.CardView>
+
+        <ListView
+            android:visibility="gone"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:id="@+id/msg_list_view"
+            android:listSelector="@android:color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+
+        <androidx.cardview.widget.CardView
+            android:visibility="gone"
+            android:id="@+id/mainac_add_server"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            app:cardBackgroundColor="#0F7697"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            app:cardCornerRadius="6dp"
+            android:layout_marginTop="24dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardElevation="12dp"
+            android:layout_gravity="center_horizontal" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/serveradd"
+                    android:layout_gravity="center_horizontal">
+
+                </ImageView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:id="@+id/mainac_add_server_tv"
+                        android:text="添加服务器"
+                        android:layout_gravity="center_horizontal" />
+                    <TextView
+                        android:layout_marginTop="3dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="点击添加"
+                        android:textColor="#E8E6E6"
+                        android:textSize="15dp"
+                        android:layout_gravity="center_horizontal">
+
+                    </TextView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:visibility="gone"
+            android:id="@+id/mainac_add_id"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
+            app:cardCornerRadius="6dp"
+            android:layout_margin="24dp"
+            app:cardBackgroundColor="#4FD560"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardElevation="12dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/addidbig"
+                    android:layout_gravity="center_horizontal">
+
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:id="@+id/mainac_add_id_tv"
+                    android:text="添加已有账户"
+                    android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="点击添加"
+                    android:textColor="#E8E6E6"
+                    android:textSize="15dp">
+
+                </TextView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/main_loading_link"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_vertical|center_horizontal">
+
+    </ProgressBar>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+    android:visibility="gone"
+    android:id="@+id/open_feature_fab"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    app:fab_expandDirection="up"
+    android:layout_margin="16dp" >
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_size="mini"
+        android:id="@+id/pull_msg_feature"
+        app:fab_icon="@drawable/pull">
+
+    </com.getbase.floatingactionbutton.FloatingActionButton>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_size="mini"
+        android:id="@+id/push_msg_feature"
+        app:fab_icon="@drawable/push">
+
+    </com.getbase.floatingactionbutton.FloatingActionButton>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_size="mini"
+        android:id="@+id/new_account_feature"
+        app:fab_icon="@drawable/newid">
+
+    </com.getbase.floatingactionbutton.FloatingActionButton>
+
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_size="mini"
+        android:id="@+id/rm_id_feature"
+        app:fab_icon="@drawable/rmid">
+
+    </com.getbase.floatingactionbutton.FloatingActionButton>
+
+</com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
