@@ -12,10 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Esndroid">
-        <activity android:name=".ServerLoginActivity"></activity>
-        <activity android:name=".IDLoginActivity" />
-        <activity android:name=".AddIDActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.ServerLoginActivity"></activity>
+        <activity android:name=".activity.IDLoginActivity" />
+        <activity android:name=".activity.AddIDActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,7 +24,7 @@
         </activity>
 
         <service
-            android:name=".ConnService"
+            android:name=".service.ConnService"
             android:enabled="true"
             android:exported="true" />
     </application>

@@ -1,4 +1,4 @@
-package com.soulter.esndroid;
+package com.soulter.esndroid.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+
+import com.soulter.esndroid.R;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

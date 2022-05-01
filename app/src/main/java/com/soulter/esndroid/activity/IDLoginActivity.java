@@ -1,24 +1,19 @@
-package com.soulter.esndroid;
+package com.soulter.esndroid.activity;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.soulter.esndroid.bean.IDBean;
+import com.soulter.esndroid.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +23,7 @@ import conn.ISessionListener;
 import packs.PackRespNotification;
 import packs.PackResult;
 
-import static com.soulter.esndroid.ConnService.getStoredID;
+import static com.soulter.esndroid.service.ConnService.getStoredID;
 
 /*
 Author : Soulter

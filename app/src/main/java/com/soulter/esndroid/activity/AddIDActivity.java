@@ -1,43 +1,30 @@
-package com.soulter.esndroid;
+package com.soulter.esndroid.activity;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.soulter.esndroid.service.ConnService;
+import com.soulter.esndroid.bean.IDBean;
+import com.soulter.esndroid.R;
+import com.soulter.esndroid.adapter.IDListAdapter;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import conn.ESNSession;
-import conn.ISessionListener;
-import packs.PackRespNotification;
-import packs.PackResult;
 
 /*
 Author : Soulter

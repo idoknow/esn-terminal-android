@@ -1,4 +1,4 @@
-package com.soulter.esndroid;
+package com.soulter.esndroid.bean;
 
 import java.util.List;
 

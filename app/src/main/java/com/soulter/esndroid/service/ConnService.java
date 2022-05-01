@@ -1,7 +1,5 @@
-package com.soulter.esndroid;
+package com.soulter.esndroid.service;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,8 +15,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.ThemedSpinnerAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -27,9 +23,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.soulter.esndroid.R;
+import com.soulter.esndroid.activity.MainActivity;
+import com.soulter.esndroid.bean.ESNBean;
+import com.soulter.esndroid.bean.IDBean;
+import com.soulter.esndroid.bean.MsgBean;
 
 import java.lang.reflect.Type;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +51,7 @@ public class ConnService extends Service {
     private int linkedCount = 0;
     private int notifyId = 1;
     private String focusedUser = "";
-    public static final String CONN_SERVICE_NAME = "com.soulter.esndroid.ConnService";
+    public static final String CONN_SERVICE_NAME = "com.soulter.esndroid.service.ConnService";
     public static final String BC_TAG_NEW_PULLED_MSG = "NEW_PULLED_MSG";
     public static final String BC_TAG_LINKED_COUNT = "LINKED_COUNT";
     public static final String BC_TAG_LINKED_USER = "LINKED_USER";
@@ -64,7 +64,7 @@ public class ConnService extends Service {
     public static final int LINKED_USER_CODE = 3;
     public static final int SEND_BASIC_INFO_CODE = 4;
     private boolean isAppRunInBG = false;
-    HashMap<String,ESNBean> linkedAccountMap = new HashMap<>();
+    HashMap<String, ESNBean> linkedAccountMap = new HashMap<>();
 
     private LocalBroadcastManager mLocalBroadcastManager;
 
@@ -146,7 +146,7 @@ public class ConnService extends Service {
                 String username = intent.getStringExtra(MainActivity.NewAcUser);
                 String passw = intent.getStringExtra(MainActivity.NewAcPass);
                 try {
-                    esnBean.esnSession.addAccount(username,passw,type);
+                    esnBean.getEsnSession().addAccount(username,passw,type);
                     Gson gson = new Gson();
                     List<IDBean> idBeanList = getStoredID(spfs);
                     List<String> types = new ArrayList<>();
@@ -176,7 +176,7 @@ public class ConnService extends Service {
                 if (linkedAccountMap.get(intent.getStringExtra(MainActivity.focus_user)).getTypes().contains("account")){
                     ESNBean esnBean = linkedAccountMap.get(intent.getStringExtra(MainActivity.focus_user));
                     try {
-                        esnBean.esnSession.removeAccount(intent.getStringExtra(MainActivity.RemoveAcUser),true);
+                        esnBean.getEsnSession().removeAccount(intent.getStringExtra(MainActivity.RemoveAcUser),true);
                     } catch (Exception e) {
                         Toast.makeText(ConnService.this,"删除失败",Toast.LENGTH_LONG).show();
                         e.printStackTrace();
@@ -191,7 +191,7 @@ public class ConnService extends Service {
 
                     ESNBean esnBean = linkedAccountMap.get(intent.getStringExtra(MainActivity.focus_user));
                     try {
-                        esnBean.esnSession.pushNotification(intent.getStringExtra(MainActivity.PushTarget), intent.getStringExtra(MainActivity.PushTitle), intent.getStringExtra(MainActivity.PushContent));
+                        esnBean.getEsnSession().pushNotification(intent.getStringExtra(MainActivity.PushTarget), intent.getStringExtra(MainActivity.PushTitle), intent.getStringExtra(MainActivity.PushContent));
                     } catch (Exception e) {
                         Toast.makeText(ConnService.this, "推送失败", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
@@ -277,7 +277,7 @@ public class ConnService extends Service {
                         receivedLinkedUserTypes(idBeans.get(position).userName,types.toString(),focusedUser);
                         ESNBean esnBean = new ESNBean(idBeans.get(position).userName,esnSession,types);
 
-                        linkedAccountMap.put(esnBean.username,esnBean);
+                        linkedAccountMap.put(esnBean.getUsername(),esnBean);
                         esnSession.requestNotifications(0,500);
 
 
@@ -319,7 +319,7 @@ public class ConnService extends Service {
     public void receivedMsg(String username,String title,String content,String time,String fromUser,int msgId){
         MsgBean msgBean= new MsgBean(username,title,content,time,fromUser,msgId);
         Bundle bundle = new Bundle();
-        Log.v("lwl","接收到Msg:"+msgBean.content);
+        Log.v("lwl","接收到Msg:"+msgBean.getContent());
         bundle.putSerializable(BC_TAG_NEW_PULLED_MSG,msgBean);
         Intent intent = new Intent();
         intent.setAction(ACTION);

@@ -1,4 +1,4 @@
-package com.soulter.esndroid;
+package com.soulter.esndroid.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -11,10 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
+import com.soulter.esndroid.bean.MsgBean;
+import com.soulter.esndroid.R;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /*
