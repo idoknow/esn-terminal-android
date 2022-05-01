@@ -74,33 +74,58 @@ public class ConnService extends Service {
         return null;
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        showNotification();
+    }
+
+    private void showNotification(){
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("connService", "connService", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+        startForeground(1, getAntiKillNotification());
+    }
+
+    private Notification getAntiKillNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.abc_vector_test)
+                .setContentTitle("ESN正在后台运行")
+                .setFullScreenIntent( null, true)
+                .setPriority(Notification.PRIORITY_HIGH);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId("connService");
+        }
+        Notification notification = builder.build();
+        return notification;
+    }
+
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final SharedPreferences spfs = context.getSharedPreferences("spfs", Context.MODE_PRIVATE);
             final SharedPreferences.Editor editor = context.getSharedPreferences("spfs", Context.MODE_PRIVATE).edit();
             if (intent.getStringExtra(MainActivity.focus_user).equals("") && intent.getStringExtra(MainActivity.feature_type_tag).equals(MainActivity.onPullForRestart)){
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for(String key:linkedAccountMap.keySet()){
-                                try{
-                                    linkedAccountMap.get(key).getEsnSession().requestNotifications(0,100);
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                    Looper.prepare();
-                                    Toast.makeText(ConnService.this,"后台时网络出现过异常，自动修复异常的代码暂时未编写，建议重启应用",Toast.LENGTH_SHORT).show();
-                                    Looper.loop();
-
-                                }
-                            }
-                            receiveLinkedCount(linkedCount);
-                            if (!focusedUser.equals("")){
-                                receivedLinkedUserTypes(focusedUser,linkedAccountMap.get(focusedUser).getTypes().toString(),focusedUser);
+                    new Thread(() -> {
+                        for(String key:linkedAccountMap.keySet()){
+                            try{
+                                linkedAccountMap.get(key).getEsnSession().requestNotifications(0,100);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                Looper.prepare();
+                                Toast.makeText(ConnService.this,"后台时网络出现过异常，自动修复异常的代码暂时未编写，建议重启应用",Toast.LENGTH_SHORT).show();
+                                Looper.loop();
 
                             }
-                            Thread.interrupted();
                         }
+                        receiveLinkedCount(linkedCount);
+                        if (!focusedUser.equals("")){
+                            receivedLinkedUserTypes(focusedUser,linkedAccountMap.get(focusedUser).getTypes().toString(),focusedUser);
+
+                        }
+                        Thread.interrupted();
                     }).start();
             }else{
                 if (!focusedUser.equals("")){
@@ -137,11 +162,11 @@ public class ConnService extends Service {
                     Log.v("lwl","logactivity  id:"+idJson);
                     editor.putString("id_beans",idJson);
                     editor.apply();
-                    Toast.makeText(ConnService.this,"新建成功",Toast.LENGTH_LONG);
+                    Toast.makeText(ConnService.this,"新建成功",Toast.LENGTH_LONG).show();
 
                 }catch (Exception e){
                     e.printStackTrace();
-                    Toast.makeText(ConnService.this,"新建失败",Toast.LENGTH_LONG);
+                    Toast.makeText(ConnService.this,"新建失败",Toast.LENGTH_LONG).show();
                 }
                 } else
                     Toast.makeText(ConnService.this, "当前未聚焦一个Account类型的账户", Toast.LENGTH_LONG).show();
@@ -153,7 +178,7 @@ public class ConnService extends Service {
                     try {
                         esnBean.esnSession.removeAccount(intent.getStringExtra(MainActivity.RemoveAcUser),true);
                     } catch (Exception e) {
-                        Toast.makeText(ConnService.this,"删除失败",Toast.LENGTH_LONG);
+                        Toast.makeText(ConnService.this,"删除失败",Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }else
@@ -168,7 +193,7 @@ public class ConnService extends Service {
                     try {
                         esnBean.esnSession.pushNotification(intent.getStringExtra(MainActivity.PushTarget), intent.getStringExtra(MainActivity.PushTitle), intent.getStringExtra(MainActivity.PushContent));
                     } catch (Exception e) {
-                        Toast.makeText(ConnService.this, "推送失败", Toast.LENGTH_LONG);
+                        Toast.makeText(ConnService.this, "推送失败", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
                 }else
@@ -177,8 +202,6 @@ public class ConnService extends Service {
             }
             if (intent.getStringExtra(MainActivity.feature_type_tag).equals(MainActivity.onAppRunInBG)){
                 isAppRunInBG = true;
-                Log.v("lwl","当前在后台");
-                createNotification("","Esndroid正在实时接收推送","这么做是为了防杀后台","",-1);
             }
             if (intent.getStringExtra(MainActivity.feature_type_tag).equals(MainActivity.onAppRunInFG)){
                 isAppRunInBG = false;
@@ -200,9 +223,6 @@ public class ConnService extends Service {
                 List<IDBean> idBeans = getStoredID(spfs);
                 if (idBeans.size()==0){
 
-                    Looper.prepare();
-                    Toast.makeText(ConnService.this,"服务暂未启动，因为没有添加账号",Toast.LENGTH_SHORT).show();
-                    Looper.loop();
                     stopSelf();
                 }
                 String serverUrl = spfs.getString("server_url","null");
@@ -215,17 +235,16 @@ public class ConnService extends Service {
                             @Override
                             public void notificationReceived(PackRespNotification packRespNotification) {
                                 Log.v("lwl","id"+position);
-                                receivedMsg(idBeans.get(position).userName,packRespNotification.Title,packRespNotification.Content,packRespNotification.Time,packRespNotification.Source,packRespNotification.Id,-1);
+                                receivedMsg(idBeans.get(position).userName,packRespNotification.Title,packRespNotification.Content,packRespNotification.Time,packRespNotification.Source,packRespNotification.Id);
                                 Log.v("lwl","rsaKey:"+packRespNotification.Id+" title:"+packRespNotification.Title);
                             }
                             @Override
                             public void sessionLogout(PackResult packResult) {
                                 if (!isRestartService){
-                                    Log.v("lwl","没有重启标志");
-                                    receivedMsg(idBeans.get(position).userName,"账户登出,正在重连...","错误:"+packResult.Error,"","",-1,-1);
+                                    receivedMsg(idBeans.get(position).userName,"账户登出, 正在重连...","错误:"+packResult.Error,"","",-1);
                                         try{
                                             linkedAccountMap.get(idBeans.get(position).userName).getEsnSession().reConnect("39.100.5.139:3003", idBeans.get(position).userName, idBeans.get(position).getPass());
-                                                receivedMsg(idBeans.get(position).userName,"账户重连成功"," ","","",-1,-1);
+                                                receivedMsg(idBeans.get(position).userName,"账户重连成功"," ","","",-1);
                                                 sendBasicInfo("loading_linked");
                                                 linkedCount+=1;
                                                 linkedAccountMap.get(idBeans.get(position).userName).getEsnSession().requestNotifications(0,500);
@@ -259,7 +278,6 @@ public class ConnService extends Service {
                         ESNBean esnBean = new ESNBean(idBeans.get(position).userName,esnSession,types);
 
                         linkedAccountMap.put(esnBean.username,esnBean);
-//                        Log.v("lwl",linkedAccountMap.toString());
                         esnSession.requestNotifications(0,500);
 
 
@@ -269,63 +287,6 @@ public class ConnService extends Service {
                     }
                 }
                 sendBasicInfo("loading_linked");
-
-
-                    while(true){
-                        if (isRestartService){
-                            Log.v("lwl","tttt");
-                            for(IDBean idBeanT:idBeans){
-                                linkedAccountMap.get(idBeanT.getUserName()).getEsnSession().dispose();
-                                linkedCount-=1;
-                                receiveLinkedCount(linkedCount);
-                            }
-                            try{
-                                Thread.sleep(500);
-                            }catch (Exception e){
-                                Log.v("lwl","BUBUBUBUBUBUBUBUBG");
-                                e.printStackTrace();
-                            }
-
-                            while(true){
-                                boolean isAllLinkDisposed = true;
-                                for(IDBean idBeanT1:idBeans){
-                                    if (linkedAccountMap.get(idBeanT1.getUserName()).getEsnSession().isAvailable()){
-                                        isAllLinkDisposed = false;
-                                    }
-                                }
-                                if (isAllLinkDisposed){
-                                    sendBasicInfo("loading_linking");
-                                    Log.v("lwl","service restart");
-                                    sendBasicInfo("service_restart");
-                                    linkedAccountMap.clear();
-                                    linkedAccountMap = null;
-                                    isRestartService = false;
-                                    Thread.interrupted();
-                                    stopSelf();
-                                    break;
-
-                                }
-                                try{
-                                    Thread.sleep(500);
-                                }catch (Exception e){
-                                    Log.v("lwl","BUBUBUBUBUBUBUBUBG");
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }else{
-                            Log.v("lwl","No Restart Signal Now...");
-                            try{
-                                Thread.sleep(2000);
-                            }catch (Exception e){
-                                Log.v("lwl","BUBUBUBUBUBUBUBUBG");
-                                e.printStackTrace();
-                                break;
-                            }
-                        }
-
-                    }
-
 
             }
         }).start();
@@ -355,7 +316,7 @@ public class ConnService extends Service {
         return arrayList;
     }
 
-    public void receivedMsg(String username,String title,String content,String time,String fromUser,int msgId,int notifyCode){
+    public void receivedMsg(String username,String title,String content,String time,String fromUser,int msgId){
         MsgBean msgBean= new MsgBean(username,title,content,time,fromUser,msgId);
         Bundle bundle = new Bundle();
         Log.v("lwl","接收到Msg:"+msgBean.content);
@@ -367,7 +328,7 @@ public class ConnService extends Service {
         LocalBroadcastManager.getInstance(ConnService.this).sendBroadcast(intent);
         if (isAppRunInBG){
             Log.v("lwl","发送了通知");
-            createNotification(username,title,content,fromUser,notifyCode);
+            createNotification(username, title, content, fromUser);
         }
 
     }
@@ -391,58 +352,37 @@ public class ConnService extends Service {
         LocalBroadcastManager.getInstance(ConnService.this).sendBroadcast(intent);
     }
 
-    public void createNotification(String user,String title,String content,String fromUser,int notyfyCode){
-        Log.v("lwl","createNotification");
+    public void createNotification(String user, String title, String content, String fromUser){
         NotificationManager notificationManager=(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = null;
-        final SharedPreferences spfs = ConnService.this.getSharedPreferences("spfs", Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = ConnService.this.getSharedPreferences("spfs", Context.MODE_PRIVATE).edit();
-        if (!spfs.getBoolean("isCreatedNotificationChannel",false)) {
-            editor.putBoolean("isCreatedNotificationChannel",true);
-            editor.apply();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel notificationChannel = new NotificationChannel("EsnMsgChannel", getString(R.string.app_name),
-                        NotificationManager.IMPORTANCE_HIGH);
-                notificationManager.createNotificationChannel(notificationChannel);
-                builder = new NotificationCompat.Builder(this, "EsnMsgChannel");
-            } else {
-                builder = new NotificationCompat.Builder(this);
-            }
-        }else{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                builder = new NotificationCompat.Builder(this, "EsnMsgChannel");
-            } else {
-                builder = new NotificationCompat.Builder(this);
-            }
+        NotificationCompat.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel("EsnMsgChannel", getString(R.string.app_name),
+                    NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(notificationChannel);
+            builder = new NotificationCompat.Builder(this, "EsnMsgChannel");
+        } else {
+            builder = new NotificationCompat.Builder(this);
         }
         builder.setSmallIcon(R.mipmap.ic_launcher)
                 .setNumber(2)
-                .setTicker("ESNdroid有新通知")
-                .setShowWhen(false)
+                .setTicker("ESN新通知")
+                .setShowWhen(true)
                 .setAutoCancel(true)
-                .setUsesChronometer(true)
                 .setFullScreenIntent( null, true)
-                .setDefaults(Notification.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
         builder.setContentText(content);
-        if (fromUser.equals("")&&user.equals("")&&isAppRunInBG){
+        if (fromUser.equals("")&&user.equals("") && isAppRunInBG){
             builder.setContentTitle(title);
             builder.setOngoing(true);
         }
-        else builder.setContentTitle(fromUser+"给"+user+":"+title);
+        else builder.setContentTitle(fromUser + "->" +user);
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 1, intent, 0);
         //点击跳转的intent
         builder.setContentIntent(pIntent);
         Notification notification = builder.build();
-        if(notyfyCode == -1){
-            notificationManager.notify(-1, notification);
-        }else{
-            notifyId+=1;
-            notificationManager.notify(notifyId, notification);
-        }
-
+        notificationManager.notify(0, notification);
 
     }
     @Override

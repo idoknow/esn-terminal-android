@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
 
         final SharedPreferences spfs = getApplicationContext().getSharedPreferences("spfs", Context.MODE_PRIVATE);
 
-        Log.v("lwltest",getStoredID(spfs).toString());
         if (getStoredID(spfs).size() == 0 || !spfs.getBoolean("is_server_added",false)){
             mainAcAddServer.setVisibility(View.VISIBLE);
             if (spfs.getBoolean("is_server_added",false)){
@@ -445,7 +444,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
     public void receivedMsg(MsgBean msgBean){
         int msgId = msgBean.getMsgId();
         boolean isSameMsg = false;
@@ -459,26 +457,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            SimpleDateFormat sf = new SimpleDateFormat( "yyyy-MM-dd,hh:mm:ss" );
-            Collections.sort(msgBeans, new Comparator<MsgBean>() {
-                @Override
-                public int compare(MsgBean msgBean, MsgBean t1) {
-                    try {
-                            Date date1 = sf.parse(msgBean.getTime());
-                            Date date2 = sf.parse(t1.getTime());
-                            if (date1.before(date2)){
-                                return -1;
-                            }
-                            if (date1.after(date2)){
-                                return  1;
-                            }
-                            return 0;
-                    } catch (Exception e){
-                        e.printStackTrace( ) ;
-                    }
-                    return 0;
-                }
-            });
         }else{
             for (int i=0;i<msgBeans.size();i++){
                 if (-1 == msgBeans.get(i).getMsgId() && msgBean.getUsername().equals(msgBeans.get(i).getUsername())){
