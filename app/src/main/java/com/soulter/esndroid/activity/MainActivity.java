@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
     ListView msgListView ;
     ProgressBar loadingLink;
 
-    FloatingActionButton newAAccountBtn;
-    FloatingActionButton removeAAccountBtn;
+    FloatingActionButton newAccountBtn;
+    FloatingActionButton removeAccountBtn;
     FloatingActionButton pushMsgBtn;
     FloatingActionButton pullMsgBtn;
     FloatingActionsMenu openFeaturesFab;
@@ -112,14 +112,14 @@ public class MainActivity extends AppCompatActivity {
         idLinkedStats = findViewById(R.id.id_linked_stats);
         idFocused = findViewById(R.id.id_focused_stats);
         addIDEntry = findViewById(R.id.id_mng_entry);
-        newAAccountBtn = findViewById(R.id.new_account_feature);
-        removeAAccountBtn = findViewById(R.id.rm_id_feature);
+        newAccountBtn = findViewById(R.id.new_account_feature);
+        removeAccountBtn = findViewById(R.id.rm_id_feature);
         openFeaturesFab = findViewById(R.id.open_feature_fab);
         openFeaturesFab.setVisibility(View.GONE);
         pushMsgBtn = findViewById(R.id.push_msg_feature);
         pullMsgBtn = findViewById(R.id.pull_msg_feature);
-        newAAccountBtn.setVisibility(View.GONE);
-        removeAAccountBtn.setVisibility(View.GONE);
+        newAccountBtn.setVisibility(View.GONE);
+        removeAccountBtn.setVisibility(View.GONE);
         pushMsgBtn.setVisibility(View.GONE);
         pullMsgBtn.setVisibility(View.GONE);
         msgListView = findViewById(R.id.msg_list_view);
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        newAAccountBtn.setOnClickListener(view -> {
+        newAccountBtn.setOnClickListener(view -> {
             if (focusedUser != null){
                 AlertDialog.Builder addIDDialog = new AlertDialog.Builder(MainActivity.this);
                 final View newAccountView = (LinearLayout)getLayoutInflater().inflate(R.layout.new_a_account_dialog,null);
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        removeAAccountBtn.setOnClickListener(view -> {
+        removeAccountBtn.setOnClickListener(view -> {
             if (focusedUser!=null){
                 AlertDialog.Builder rmAccountDialog = new AlertDialog.Builder(MainActivity.this);
                 final View rmAccountView = (LinearLayout)getLayoutInflater().inflate(R.layout.remove_a_account_dialog,null);
@@ -303,6 +303,17 @@ public class MainActivity extends AppCompatActivity {
                 displayFeature(data.getStringExtra("ID_types"));
 
                 idFocused.setText("| 聚焦:"+focusedUser+" 类型:"+data.getStringExtra("ID_types"));
+
+                newAccountBtn.setVisibility(View.GONE);
+                removeAccountBtn.setVisibility(View.GONE);
+                pushMsgBtn.setVisibility(View.GONE);
+                if (data.getStringExtra("ID_types").contains("push")){
+                    pushMsgBtn.setVisibility(View.VISIBLE);
+                }
+                if (data.getStringExtra("ID_types").contains("account")){
+                    removeAccountBtn.setVisibility(View.VISIBLE);
+                    newAccountBtn.setVisibility(View.VISIBLE);
+                }
                 if (Utils.isServiceRunning(MainActivity.this,ConnService.CONN_SERVICE_NAME)){
                     Toast.makeText(this,"服务正在运行",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
@@ -313,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Intent serviceIntent = new Intent(MainActivity.this,ConnService.class);
                     startService(serviceIntent);
-                    Toast.makeText(this,"服务在得到返回值后启动成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"服务启动",Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -432,16 +443,16 @@ public class MainActivity extends AppCompatActivity {
                     pullMsgBtn.setVisibility(View.VISIBLE);
                 }
             });
-            newAAccountBtn.post(new Runnable() {
+            newAccountBtn.post(new Runnable() {
                 @Override
                 public void run() {
-                    newAAccountBtn.setVisibility(View.VISIBLE);
+                    newAccountBtn.setVisibility(View.VISIBLE);
                 }
             });
-            removeAAccountBtn.post(new Runnable() {
+            removeAccountBtn.post(new Runnable() {
                 @Override
                 public void run() {
-                    removeAAccountBtn.setVisibility(View.VISIBLE);
+                    removeAccountBtn.setVisibility(View.VISIBLE);
                 }
             });
         }

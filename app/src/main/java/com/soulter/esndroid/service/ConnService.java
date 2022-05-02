@@ -91,8 +91,9 @@ public class ConnService extends Service {
 
     private Notification getAntiKillNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.abc_vector_test)
+                .setSmallIcon(R.drawable.pull)
                 .setContentTitle("ESN正在后台运行")
+                .setShowWhen(false)
                 .setFullScreenIntent( null, true)
                 .setPriority(Notification.PRIORITY_HIGH);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
